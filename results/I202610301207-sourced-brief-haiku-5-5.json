@@ -1,0 +1,85 @@
+{
+  "sweep": "I202610301207",
+  "build": "sourced-brief",
+  "title": "Sourced brief",
+  "version": "v1.2 / 1.2.0",
+  "skill_version": "v1.2",
+  "server_version": "1.2.0",
+  "model": "claude-haiku-5-5",
+  "effort": null,
+  "model_tag": "haiku-5-5",
+  "rank": 1,
+  "date": "2026-10-30",
+  "started_at": "2026-10-30T12:07:27.020Z",
+  "mode": "imported",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "01_clean": {
+      "match": false,
+      "name": "01_clean. Clean week"
+    },
+    "02_disagreement": {
+      "match": false,
+      "name": "02_disagreement. A disagreement"
+    },
+    "03_change": {
+      "match": true,
+      "name": "03_change. A change since last week"
+    },
+    "04_gap": {
+      "match": false,
+      "name": "04_gap. A section with no source"
+    },
+    "05_inference": {
+      "match": true,
+      "name": "05_inference. A tempting inference"
+    },
+    "06_confidential": {
+      "match": true,
+      "name": "06_confidential. A confidential source"
+    },
+    "state_a": {
+      "match": false,
+      "name": "state_a. State A: one new document"
+    },
+    "state_b": {
+      "match": false,
+      "name": "state_b. State B: identical inputs, identical page"
+    }
+  },
+  "matched": 3,
+  "of_cases": 8,
+  "gates_held": 4,
+  "of_gates": 4,
+  "passed": false,
+  "no_verdict": false,
+  "bar": "every case and both state cases matched",
+  "model_calls": 35,
+  "tokens": {
+    "input": 86,
+    "output": 85541,
+    "cache_read": 388599,
+    "cache_write": 165053
+  },
+  "cost_usd": 0.067296715,
+  "harness_cost_usd": 0.067296715,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 5,
+  "minutes": null,
+  "warnings": [],
+  "harness_record": "../sourced-brief/eval/results/B202610301207-haiku-5-5.json",
+  "harness_verdict": {
+    "cases_matched": 3,
+    "of_cases": 6,
+    "state_matched": 0,
+    "of_state": 2,
+    "claims_verified": 275,
+    "of_claims": 289,
+    "unsourced_caught": 4,
+    "gates_held": 4,
+    "of_gates": 4,
+    "wording_identical": false,
+    "passed": false
+  }
+}

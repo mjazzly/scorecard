@@ -1,0 +1,80 @@
+{
+  "sweep": "S202610301552",
+  "build": "meeting-tracker-server",
+  "title": "Meeting tracker",
+  "version": "v2.0 / 2.1.0",
+  "skill_version": "v2.0",
+  "server_version": "2.1.0",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "model_tag": "opus-5-5-high",
+  "rank": 2,
+  "date": "2026-10-30",
+  "started_at": "2026-10-30T15:52:12.871Z",
+  "mode": "harness",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "01_halden_kickoff.txt": {
+      "match": true,
+      "name": "01_halden_kickoff.txt"
+    },
+    "02_meridian_pricing.txt": {
+      "match": true,
+      "name": "02_meridian_pricing.txt"
+    },
+    "03_northgate_claims.txt": {
+      "match": true,
+      "name": "03_northgate_claims.txt"
+    },
+    "04_halden_finance.txt": {
+      "match": true,
+      "name": "04_halden_finance.txt"
+    },
+    "05_meridian_update.txt": {
+      "match": true,
+      "name": "05_meridian_update.txt"
+    },
+    "06_northgate_board.txt": {
+      "match": true,
+      "name": "06_northgate_board.txt"
+    },
+    "07_halden_followup.txt": {
+      "match": true,
+      "name": "07_halden_followup.txt"
+    },
+    "08_meridian_contracts.txt": {
+      "match": true,
+      "name": "08_meridian_contracts.txt"
+    }
+  },
+  "matched": 8,
+  "of_cases": 8,
+  "gates_held": 1,
+  "of_gates": 1,
+  "passed": true,
+  "no_verdict": false,
+  "bar": "four of the five matched and the decline held",
+  "model_calls": 21,
+  "tokens": {
+    "input": 46,
+    "output": 12207,
+    "cache_read": 395395,
+    "cache_write": 36690
+  },
+  "cost_usd": 0.506853,
+  "harness_cost_usd": 0.506853,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 5,
+  "minutes": 2.4,
+  "warnings": [
+    "1 file could not be copied into the staging copy: test/out/data/transcripts/02_meridian_pricing.txt (EACCES)"
+  ],
+  "harness_record": "runs/S202610301552/meeting-tracker-server-opus-5-5-high/copy/eval/runs/S202610301552-opus-5-5-high/result.json",
+  "harness_verdict": {
+    "five_matched": 5,
+    "decline_held": true,
+    "state_matched": 2,
+    "passed": true
+  }
+}

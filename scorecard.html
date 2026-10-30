@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a2330;--muted:#6b7684;--line:#e6e9ee;--marine:#1f4e79;--amber:#c9922a;--met:#eef6ee;--notmet:#fbeeee;--paper:#f6f7f9}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Manrope,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.5}
+main{max-width:1100px;margin:0 auto;padding:40px 24px 56px}h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}h1 i{display:inline-block;width:10px;height:10px;background:var(--marine);margin-right:10px;vertical-align:middle}h1 em{display:inline-block;width:10px;height:10px;background:var(--amber);margin-left:10px;vertical-align:middle}
+h2{font-size:18px;margin:36px 0 12px}h2 small{color:var(--muted);font-weight:400;font-size:13px;margin-left:8px}.lead{color:var(--muted);margin:0 0 20px}
+.numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 8px}.numbers div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-height:88px}.numbers b{display:block;font-size:26px;line-height:1.1}.numbers span{color:var(--muted);font-size:13px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}thead th{font-size:13px;color:var(--muted);font-weight:600;background:#fafbfc}tr:last-child td,tr:last-child th{border-bottom:0}
+th[scope=row]{width:190px;background:#fafbfc}th[scope=row] small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+.cell{width:220px}.cell .line{font-size:14px}.cell.met{background:var(--met)}.cell.notmet{background:var(--notmet)}.cell.empty{color:var(--muted)}.cell.smallest .verdict{color:var(--amber);font-weight:700}
+.verdict{font-size:12px;margin-top:6px;color:var(--muted)}.bar{height:6px;background:#e9edf2;border-radius:3px;margin-top:8px;overflow:hidden}.bar span{display:block;height:100%;background:var(--marine)}
+.plain td,.plain th{font-size:14px}.note{color:var(--muted);font-size:13px}footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:800px){.numbers{grid-template-columns:repeat(2,1fr)}table{display:block;overflow-x:auto}}
+</style></head><body><main>
+<h1><i></i>Scorecard<em></em></h1>
+<p class="lead">Every build on every model, run by one command, on the record. Rebuilt from <code>results/</code> on 2026-10-30.</p>
+<div class="numbers"><div><b>4</b><span>builds covered</span></div><div><b>25</b><span>counted runs on the record, 15 imported from the builds' own records</span></div><div><b>3</b><span>sweeps</span></div><div><b>US$1.754</b><span>one full sweep on the smallest passing models</span></div></div>
+<section><h2>Builds by model</h2><table><thead><tr><th>Build</th><th>haiku-5-5</th><th>opus-5-5-high</th></tr></thead><tbody>
+<tr><th scope="row"><b>Meeting tracker</b><small>v2.0 / 2.1.0</small></th><td class="cell met smallest"><div class="line"><b>7 of 8</b> cases</div><div class="line">gates <b>1 of 1</b></div><div class="line">US$0.017</div><div class="bar"><span style="width:1%"></span></div><div class="verdict">bar met · smallest passing</div></td><td class="cell met"><div class="line"><b>8 of 8</b> cases</div><div class="line">gates <b>1 of 1</b></div><div class="line">US$0.507</div><div class="bar"><span style="width:30%"></span></div><div class="verdict">bar met</div></td></tr>
+<tr><th scope="row"><b>Spreadsheet normaliser</b><small>v1.0 / 1.0.0</small></th><td class="cell met smallest"><div class="line"><b>8 of 8</b> cases</div><div class="line">gates <b>1 of 1</b></div><div class="line">US$0.029</div><div class="bar"><span style="width:2%"></span></div><div class="verdict">bar met · smallest passing</div></td><td class="cell met"><div class="line"><b>8 of 8</b> cases</div><div class="line">gates <b>1 of 1</b></div><div class="line">US$0.907</div><div class="bar"><span style="width:54%"></span></div><div class="verdict">bar met</div></td></tr>
+<tr><th scope="row"><b>Data answers</b><small>v1.1 / 1.1.0</small></th><td class="cell met smallest"><div class="line"><b>28 of 28</b> cases</div><div class="line">gates <b>6 of 6</b></div><div class="line">US$0.040</div><div class="bar"><span style="width:2%"></span></div><div class="verdict">bar met · smallest passing</div></td><td class="cell met"><div class="line"><b>28 of 28</b> cases</div><div class="line">gates <b>6 of 6</b></div><div class="line">US$1.512</div><div class="bar"><span style="width:91%"></span></div><div class="verdict">bar met</div></td></tr>
+<tr><th scope="row"><b>Sourced brief</b><small>v1.3 / 1.3.0</small></th><td class="cell notmet"><div class="line"><b>7 of 8</b> cases</div><div class="line">gates <b>4 of 4</b></div><div class="line">US$0.066</div><div class="bar"><span style="width:4%"></span></div><div class="verdict">bar not met</div></td><td class="cell met smallest"><div class="line"><b>8 of 8</b> cases</div><div class="line">gates <b>4 of 4</b></div><div class="line">US$1.667</div><div class="bar"><span style="width:100%"></span></div><div class="verdict">bar met · smallest passing</div></td></tr>
+</tbody></table><p class="note"><b>Cases</b>: the build's own case set, matched by the build's own checker. <b>Gates</b>: the stop and decline cases in that set. <b>Cost</b>: every token at the price in the build's prices file, caching counted; the bars share one scale across the table. The <b>bar</b> is each build's own pass rule.</p></section>
+<section><h2>Changes since the last run <small>sweep S202610301625</small></h2><table class="plain"><thead><tr><th>Build</th><th>Model</th><th>Against</th><th>Version</th><th>Cases changed</th><th>Cost</th><th>Bar</th></tr></thead><tbody><tr><td><b>Sourced brief</b></td><td>haiku-5-5</td><td>S202610301543</td><td><b>v1.2 / 1.2.0 to v1.3 / 1.3.0</b></td><td><b>06_confidential</b> miss to match</td><td>US$0.064 to US$0.066 (+3%)</td><td>not met</td></tr>
+<tr><td><b>Sourced brief</b></td><td>opus-5-5-high</td><td>S202610301552</td><td><b>v1.2 / 1.2.0 to v1.3 / 1.3.0</b></td><td><b>state_a</b> miss to match</td><td>US$1.758 to US$1.667 (-5%)</td><td><b>not met to met</b></td></tr></tbody></table><p class="note">A cost that moved by more than 30% against the previous record is marked <b>moved</b>.</p></section>
+<section><h2>Version record</h2><table class="plain"><thead><tr><th>Build</th><th>Version</th><th>First recorded</th><th>haiku-5-5</th><th>opus-5-5-high</th></tr></thead><tbody>
+<tr><td><b>Meeting tracker</b></td><td>v2.0 / 2.0.0</td><td>2026-10-24</td><td>7 of 8, met</td><td>8 of 8, met</td></tr>
+<tr><td><b>Meeting tracker</b></td><td>v2.0 / 2.1.0</td><td>2026-10-30</td><td>7 of 8, met</td><td>8 of 8, met</td></tr>
+<tr><td><b>Spreadsheet normaliser</b></td><td>v1.0 / 1.0.0</td><td>2026-10-30</td><td>8 of 8, met</td><td>8 of 8, met</td></tr>
+<tr><td><b>Data answers</b></td><td>v1.0 / 1.0.0</td><td>2026-10-30</td><td>27 of 28, not met</td><td></td></tr>
+<tr><td><b>Data answers</b></td><td>v1.1 / 1.1.0</td><td>2026-10-30</td><td>28 of 28, met</td><td>28 of 28, met</td></tr>
+<tr><td><b>Sourced brief</b></td><td>v1.0 / 1.0.0</td><td>2026-10-30</td><td>0 of 8, not met</td><td>0 of 8, not met</td></tr>
+<tr><td><b>Sourced brief</b></td><td>v1.1 / 1.1.0</td><td>2026-10-30</td><td>5 of 8, not met</td><td>5 of 8, not met</td></tr>
+<tr><td><b>Sourced brief</b></td><td>v1.2 / 1.2.0</td><td>2026-10-30</td><td>6 of 8, not met</td><td>7 of 8, not met</td></tr>
+<tr><td><b>Sourced brief</b></td><td>v1.3 / 1.3.0</td><td>2026-10-30</td><td>7 of 8, not met</td><td>8 of 8, met</td></tr>
+</tbody></table></section>
+<footer>Megat Jazly · <a href="https://mjazzly.github.io">mjazzly.github.io</a></footer>
+</main></body></html>

@@ -1,0 +1,10 @@
+{
+  "root": "..",
+  "models": [
+    { "id": "claude-haiku-5-5", "effort": null, "rank": 1 },
+    { "id": "claude-opus-5-5", "effort": "high", "rank": 2 }
+  ],
+  "parallel": 2,
+  "cost_move_share": 0.30,
+  "prices_max_age_days": 60
+}

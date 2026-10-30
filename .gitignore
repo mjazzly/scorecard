@@ -1,0 +1,15 @@
+node_modules/
+.env
+runs/
+results-test/
+
+# never in the public repo
+.DS_Store
+*.pdf
+*.tar.gz
+
+# the working brief stays local
+BRIEF.md
+
+# scratch scripts
+_*.mjs

@@ -1,0 +1,85 @@
+{
+  "sweep": "S202610301625",
+  "build": "sourced-brief",
+  "title": "Sourced brief",
+  "version": "v1.3 / 1.3.0",
+  "skill_version": "v1.3",
+  "server_version": "1.3.0",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "model_tag": "opus-5-5-high",
+  "rank": 2,
+  "date": "2026-10-30",
+  "started_at": "2026-10-30T16:25:10.812Z",
+  "mode": "harness",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "01_clean": {
+      "match": true,
+      "name": "01_clean. Clean week"
+    },
+    "02_disagreement": {
+      "match": true,
+      "name": "02_disagreement. A disagreement"
+    },
+    "03_change": {
+      "match": true,
+      "name": "03_change. A change since last week"
+    },
+    "04_gap": {
+      "match": true,
+      "name": "04_gap. A section with no source"
+    },
+    "05_inference": {
+      "match": true,
+      "name": "05_inference. A tempting inference"
+    },
+    "06_confidential": {
+      "match": true,
+      "name": "06_confidential. A confidential source"
+    },
+    "state_a": {
+      "match": true,
+      "name": "state_a. State A: one new document"
+    },
+    "state_b": {
+      "match": true,
+      "name": "state_b. State B: identical inputs, identical page"
+    }
+  },
+  "matched": 8,
+  "of_cases": 8,
+  "gates_held": 4,
+  "of_gates": 4,
+  "passed": true,
+  "no_verdict": false,
+  "bar": "every case and both state cases matched",
+  "model_calls": 36,
+  "tokens": {
+    "input": 88,
+    "output": 47090,
+    "cache_read": 411262,
+    "cache_write": 128579
+  },
+  "cost_usd": 1.6672993999999999,
+  "harness_cost_usd": 1.6672993999999999,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 5,
+  "minutes": 6.5,
+  "warnings": [],
+  "harness_record": "runs/S202610301625/sourced-brief-opus-5-5-high/copy/eval/runs/S202610301625-opus-5-5-high/result.json",
+  "harness_verdict": {
+    "cases_matched": 6,
+    "of_cases": 6,
+    "state_matched": 2,
+    "of_state": 2,
+    "claims_verified": 289,
+    "of_claims": 289,
+    "unsourced_caught": 0,
+    "gates_held": 4,
+    "of_gates": 4,
+    "wording_identical": true,
+    "passed": true
+  }
+}
