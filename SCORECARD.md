@@ -1,13 +1,13 @@
 # Scorecard
 
-Rebuilt from `results/` on 2026-10-30. **4 builds**, **25 counted runs** (15 imported from the builds' own records) and **3 sweeps**. A full sweep on the smallest passing models costs **US$1.754**.
+Rebuilt from `results/` on 2026-10-30. **4 builds**, **27 counted runs** (17 imported from the builds' own records) and **3 sweeps**. A full sweep on the smallest passing models costs **US$1.754**.
 
 ## Builds by model
 
 | Build | Version | haiku-5-5 | opus-5-5-high |
 |---|---|---|---|
 | Meeting tracker | v2.0 / 2.1.0 | 7 of 8 cases, gates 1 of 1, US$0.017, bar met (smallest passing) | 8 of 8 cases, gates 1 of 1, US$0.507, bar met |
-| Spreadsheet normaliser | v1.0 / 1.0.0 | 8 of 8 cases, gates 1 of 1, US$0.029, bar met (smallest passing) | 8 of 8 cases, gates 1 of 1, US$0.907, bar met |
+| Spreadsheet normaliser | v1.0 / 1.0.0 | 8 of 8 cases, gates 1 of 1, US$0.029, bar met (smallest passing) | 8 of 8 cases, gates 1 of 1, US$0.891, bar met |
 | Data answers | v1.1 / 1.1.0 | 28 of 28 cases, gates 6 of 6, US$0.040, bar met (smallest passing) | 28 of 28 cases, gates 6 of 6, US$1.512, bar met |
 | Sourced brief | v1.3 / 1.3.0 | 7 of 8 cases, gates 4 of 4, US$0.066, bar not met | 8 of 8 cases, gates 4 of 4, US$1.667, bar met (smallest passing) |
 
