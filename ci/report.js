@@ -62,6 +62,12 @@ L.push("<details><summary>Changes since the last run</summary>", "", "```", desc
 const text = L.join("\n");
 console.log(text);
 if (summaryFile) fs.appendFileSync(summaryFile, text + "\n");
+// Annotations: the same verdict on the run's page and on the commit's checks, one line per problem.
+if (process.env.GITHUB_ACTIONS) {
+  const esc = (t) => String(t).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+  for (const x of red) console.log(`::error title=${esc(x.case ? "Case broke" : "Run refused")}::${esc(`${x.build} on ${x.model}${x.case ? `, case ${x.case}` : ""}: ${x.why}`)}`);
+  if (green) console.log(`::notice title=Green::${esc(`sweep ${sweep}: ${rows.map(({ r }) => `${r.build} ${r.matched} of ${r.of_cases}`).join(", ")}; ${money(total)}`)}`);
+}
 
 if (green && argv.includes("--green")) {
   const started = recs.map((r) => r.started_at).sort()[0];
