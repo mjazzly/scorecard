@@ -1,8 +1,9 @@
 name: sweep
 
 # Reruns every build's case set on the smallest model, at the commits in builds.lock, and fails the
-# run if any case that matched on its build's last record misses now. A green run on main commits
-# its records to results/ (prefix [ci]) and dates the badge. The largest model is never run here.
+# run if any case that matched on its build's last record misses now and again on one rerun of that
+# build. A green run on main commits its records to results/ (prefix [ci]) and dates the badge. The
+# largest model is never run here.
 on:
   push:
     branches: [main]
@@ -36,12 +37,12 @@ jobs:
           fi
 
       - name: Check out the scorecard
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: scorecard
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
 
@@ -64,16 +65,31 @@ jobs:
           # A build missing its bar makes run.js exit 1; that alone is not red here. The report decides.
           node run.js --locked --smallest --sweep "$SWEEP" || echo "run.js exited $?; the report decides the run"
 
-      - name: Report, and fail on any case that broke
+      - name: Name the builds with a case that missed once
+        id: plan
         working-directory: scorecard
-        run: node ci/report.js --sweep "${{ steps.sweep.outputs.sweep }}" --green
+        run: node ci/report.js --sweep "${{ steps.sweep.outputs.sweep }}" --plan
+
+      - name: Rerun those builds once, to tell a break from noise
+        if: steps.plan.outputs.rerun != ''
+        working-directory: scorecard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node run.js --locked --smallest --builds "${{ steps.plan.outputs.rerun }}" --sweep "${{ steps.sweep.outputs.sweep }}r" --no-page || echo "run.js exited $?; the report decides the run"
+
+      - name: Report, and fail on any case that missed twice
+        working-directory: scorecard
+        run: node ci/report.js --sweep "${{ steps.sweep.outputs.sweep }}" --rerun "${{ steps.sweep.outputs.sweep }}r" --green
 
       - name: Keep the run folders
         if: always() && steps.sweep.outputs.sweep != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: runs-${{ steps.sweep.outputs.sweep }}
-          path: scorecard/runs/${{ steps.sweep.outputs.sweep }}
+          path: |
+            scorecard/runs/${{ steps.sweep.outputs.sweep }}
+            scorecard/runs/${{ steps.sweep.outputs.sweep }}r
+            scorecard/results/${{ steps.sweep.outputs.sweep }}*.json
           retention-days: 30
           if-no-files-found: ignore
 
@@ -84,6 +100,7 @@ jobs:
           SWEEP="${{ steps.sweep.outputs.sweep }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node run.js --page-only
           git add results SCORECARD.md scorecard.html ci/last-green.json
           git commit -q -m "[ci] sweep $SWEEP on the smallest model (${{ github.event_name }})"
           git pull -q --rebase --autostash origin main

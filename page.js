@@ -18,7 +18,8 @@ export function summarise(all, settings) {
   const counted = all.filter((r) => r.counted && !r.refused);
   const table = latest(all), smallest = smallestPassing(all);
   // Sweeps are the scorecard's own runs; imported records keep their history but are not sweeps.
-  const sweeps = [...new Set(all.filter((r) => r.mode !== "imported").map((r) => r.sweep))].sort();
+  // A CI rerun (sweep id ending in r) belongs to the sweep it confirms and is not a sweep of its own.
+  const sweeps = [...new Set(all.filter((r) => r.mode !== "imported").map((r) => r.sweep.replace(/r$/, "")))].sort();
   const last = sweeps.at(-1) || null;
   const importedRuns = counted.filter((r) => r.mode === "imported").length;
   const models = [...settings.models.map(modelTag)];
