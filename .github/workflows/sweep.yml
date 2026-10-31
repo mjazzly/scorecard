@@ -1,0 +1,91 @@
+name: sweep
+
+# Reruns every build's case set on the smallest model, at the commits in builds.lock, and fails the
+# run if any case that matched on its build's last record misses now. A green run on main commits
+# its records to results/ (prefix [ci]) and dates the badge. The largest model is never run here.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 1 * * 0"   # Sunday 9:17 AM in Kuala Lumpur
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sweep
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # The records carry local time without an offset and are ordered by it; local sweeps run in
+      # Kuala Lumpur, so CI does too.
+      TZ: Asia/Kuala_Lumpur
+    steps:
+      - name: Refuse without the key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error title=No API key::The repository secret ANTHROPIC_API_KEY is missing or empty. Add the scorecard-ci workspace key under Settings, Secrets and variables, Actions. Nothing was run."
+            exit 1
+          fi
+
+      - name: Check out the scorecard
+        uses: actions/checkout@v4
+        with:
+          path: scorecard
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check out the four builds at their pinned commits
+        working-directory: scorecard
+        run: node ci/checkout.js
+
+      - name: The scorecard's own case set (no key, no model)
+        working-directory: scorecard
+        run: node test/run_cases.js
+
+      - name: Sweep on the smallest model
+        id: sweep
+        working-directory: scorecard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          SWEEP=$(node --input-type=module -e 'import { sweepId } from "./run.js"; console.log(sweepId())')
+          echo "sweep=$SWEEP" >> "$GITHUB_OUTPUT"
+          # A build missing its bar makes run.js exit 1; that alone is not red here. The report decides.
+          node run.js --locked --smallest --sweep "$SWEEP" || echo "run.js exited $?; the report decides the run"
+
+      - name: Report, and fail on any case that broke
+        working-directory: scorecard
+        run: node ci/report.js --sweep "${{ steps.sweep.outputs.sweep }}" --green
+
+      - name: Keep the run folders
+        if: always() && steps.sweep.outputs.sweep != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: runs-${{ steps.sweep.outputs.sweep }}
+          path: scorecard/runs/${{ steps.sweep.outputs.sweep }}
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Record the green run
+        if: success() && github.ref == 'refs/heads/main'
+        working-directory: scorecard
+        run: |
+          SWEEP="${{ steps.sweep.outputs.sweep }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results SCORECARD.md scorecard.html ci/last-green.json
+          git commit -q -m "[ci] sweep $SWEEP on the smallest model (${{ github.event_name }})"
+          git pull -q --rebase --autostash origin main
+          git push -q origin HEAD:main
+          echo "Recorded as $(git rev-parse --short HEAD) on main." >> "$GITHUB_STEP_SUMMARY"

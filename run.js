@@ -5,6 +5,7 @@
 //   node run.js                               every build found under the root, every model in settings.json
 //   node run.js --builds data-answers,sourced-brief --models haiku-5-5
 //   node run.js --mock                        every build's scripted stand-in; records go to results-test/, never the page
+//   node run.js --locked --smallest           what CI runs: the builds at their builds.lock commits, the smallest model only
 //   node run.js --page-only                   rebuild SCORECARD.md and scorecard.html from results/
 //
 // What a job (one build, one model) does:
@@ -25,6 +26,7 @@ import { stageCopy, applyOverlays } from "./lib/stage.js";
 import { keyNames, scanForKey, transcriptReads } from "./lib/gates.js";
 import { pricesInfo, deriveRecord, modelTag } from "./lib/record.js";
 import { compareSweep, loadRecords, describeChanges } from "./compare.js";
+import { readLock, commitOf, applyLock } from "./lib/lock.js";
 import { writePages } from "./page.js";
 
 export const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -67,14 +69,16 @@ export async function runJob({ settings, sweep, entry, model, mock = false, over
   const jobDir = path.join(runsDir, sweep, `${entry.name}-${tag}`);
   const recordPath = path.join(resultsDir, `${sweep}-${entry.name}-${tag}.json`);
   fs.mkdirSync(resultsDir, { recursive: true });
-  const finish = (record) => { fs.writeFileSync(recordPath, JSON.stringify(record, null, 2)); return record; };
+  // Every record names the commit the build ran at (null when the folder is not a git checkout).
+  const src = entry.dir ? commitOf(entry.dir) : { commit: null, dirty: null };
+  const finish = (record) => { Object.assign(record, { commit: src.commit, dirty: src.dirty }); fs.writeFileSync(recordPath, JSON.stringify(record, null, 2)); return record; };
   const refuse = (gate, detail) => {
     say(`  ${entry.name} on ${tag}: REFUSED (${gate}: ${detail})`);
     return finish(deriveRecord({ sweep, adapter, model, mode, started_at, harness: null, harness_path: null, prices: null, refused: { gate, detail } }));
   };
 
-  // Gate: the adapter, before any process.
-  if (entry.error) return refuse("adapter", entry.error);
+  // Gate: the adapter (or, on a locked sweep, the lock), before any process.
+  if (entry.error) return refuse(entry.gate || "adapter", entry.error);
 
   // The staging copy, then the planted changes (tests only), then the blind gate before the model.
   fs.mkdirSync(jobDir, { recursive: true });
@@ -119,18 +123,19 @@ async function pool(jobs, n) {
 }
 
 // The sweep: every build found under the root, every model chosen, in parallel up to the setting.
-export async function sweep({ settings, root, builds = null, models = null, mock = false, overlays = {}, sweep: id = sweepId(), runsDir, resultsDir, parallel, key, say = console.log, page = true, scorecardDir = HERE }) {
+export async function sweep({ settings, root, builds = null, models = null, mock = false, locked = false, overlays = {}, sweep: id = sweepId(), runsDir, resultsDir, parallel, key, say = console.log, page = true, scorecardDir = HERE }) {
   runsDir = runsDir || path.join(scorecardDir, "runs");
   resultsDir = resultsDir || path.join(scorecardDir, mock ? "results-test" : "results");
   const chosen = (models || settings.models).map((m) => typeof m === "string" ? settings.models.find((s) => s.id === m || modelTag(s) === m) || { id: m, effort: null, rank: 99 } : m);
-  const entries = findAdapters(root).filter((e) => !builds || builds.includes(e.name));
-  say(`sweep ${id}${mock ? " (mock)" : ""}: ${entries.length} build${entries.length === 1 ? "" : "s"} under ${root}, models ${chosen.map(modelTag).join(", ")}`);
+  let entries = findAdapters(root).filter((e) => !builds || builds.includes(e.name));
+  if (locked) entries = applyLock(entries, readLock(scorecardDir)).filter((e) => !builds || builds.includes(e.name));
+  say(`sweep ${id}${mock ? " (mock)" : ""}${locked ? " (locked)" : ""}: ${entries.length} build${entries.length === 1 ? "" : "s"} under ${root}, models ${chosen.map(modelTag).join(", ")}`);
   for (const e of entries) if (e.error) say(`  ${e.name}: ${e.error}`);
   const jobs = [];
   for (const entry of entries) for (const model of chosen) jobs.push(() => runJob({ settings, sweep: id, entry, model, mock, overlays: overlays[entry.name] || [], runsDir, resultsDir, key, say }));
   const records = await pool(jobs, parallel ?? settings.parallel ?? 2);
   fs.mkdirSync(path.join(runsDir, id), { recursive: true });
-  fs.writeFileSync(path.join(runsDir, id, "sweep.json"), JSON.stringify({ sweep: id, mock, root, models: chosen, records: records.map((r) => `${r.sweep}-${r.build}-${r.model_tag}.json`) }, null, 2));
+  fs.writeFileSync(path.join(runsDir, id, "sweep.json"), JSON.stringify({ sweep: id, mock, locked, root, models: chosen, records: records.map((r) => `${r.sweep}-${r.build}-${r.model_tag}.json`) }, null, 2));
   const all = loadRecords(resultsDir);
   const changes = compareSweep(all, id, settings);
   say("\n" + describeChanges(changes));
@@ -150,7 +155,9 @@ if (process.argv[1] && fs.realpathSync(process.argv[1]) === fileURLToPath(import
   const key = mock ? null : apiKey();
   if (!mock && !key) { console.error("No API key. Put ANTHROPIC_API_KEY=... in .env in this folder (see .env.example), or set it in the environment, or run with --mock."); process.exit(2); }
   const list = (s) => (s ? s.split(",").map((x) => x.trim()).filter(Boolean) : null);
-  const r = await sweep({ settings, root, builds: list(arg("builds")), models: list(arg("models")), mock, parallel: arg("parallel") ? Number(arg("parallel")) : undefined, key, page: !flag("no-page"), sweep: arg("sweep") || undefined });
+  // --smallest: the model ranked first in settings.json, and no other (CI never runs the largest).
+  const models = flag("smallest") ? [[...settings.models].sort((a, b) => a.rank - b.rank)[0].id] : list(arg("models"));
+  const r = await sweep({ settings, root, builds: list(arg("builds")), models, mock, locked: flag("locked"), parallel: arg("parallel") ? Number(arg("parallel")) : undefined, key, page: !flag("no-page"), sweep: arg("sweep") || undefined });
   const bad = r.records.filter((x) => x.refused || !x.passed);
   process.exit(bad.length ? 1 : 0);
 }

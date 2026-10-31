@@ -1,6 +1,6 @@
 {
   "name": "scorecard",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "One harness above four builds: runs every build's case set on every model with one command, through each build's own checker, and keeps one scorecard with the changes since the last run and the smallest model that passes. Adapters only; nothing inside the builds is rewritten.",
   "type": "module",
   "main": "run.js",
