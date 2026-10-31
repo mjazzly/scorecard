@@ -1,0 +1,163 @@
+{
+  "sweep": "S202610312155",
+  "build": "data-answers",
+  "title": "Data answers",
+  "version": "v1.1 / 1.1.0",
+  "skill_version": "v1.1",
+  "server_version": "1.1.0",
+  "model": "claude-haiku-5-5",
+  "effort": null,
+  "model_tag": "haiku-5-5",
+  "rank": 1,
+  "date": "2026-10-31",
+  "started_at": "2026-10-31T21:55:15.829Z",
+  "mode": "harness",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "A01": {
+      "match": true,
+      "name": "A01. How many orders did we take in 2025?"
+    },
+    "A02": {
+      "match": true,
+      "name": "A02. What was revenue in March 2025?"
+    },
+    "A03": {
+      "match": true,
+      "name": "A03. Orders by branch in Q2 2025"
+    },
+    "A04": {
+      "match": true,
+      "name": "A04. Returns rate by branch for Q3 2025"
+    },
+    "A05": {
+      "match": true,
+      "name": "A05. Average order value in March 2025"
+    },
+    "A06": {
+      "match": true,
+      "name": "A06. Revenue by category for the whole of 2025"
+    },
+    "A07": {
+      "match": true,
+      "name": "A07. What is the returns rate for online orders in 2025?"
+    },
+    "A08": {
+      "match": true,
+      "name": "A08. Share of revenue by branch in 2025"
+    },
+    "A09": {
+      "match": true,
+      "name": "A09. Month on month revenue growth for June 2025"
+    },
+    "A10": {
+      "match": true,
+      "name": "A10. Riverside revenue by month in 2025"
+    },
+    "A11": {
+      "match": true,
+      "name": "A11. Net revenue in Q4 2025"
+    },
+    "A12": {
+      "match": true,
+      "name": "A12. Value of Kitchen returns in Q1 2025"
+    },
+    "A13": {
+      "match": true,
+      "name": "A13. Largest single order at the Airport branch in 2025"
+    },
+    "A14": {
+      "match": true,
+      "name": "A14. Orders by channel in August 2025"
+    },
+    "A15": {
+      "match": true,
+      "name": "A15. Quarter on quarter revenue growth for Q3 2025"
+    },
+    "A16": {
+      "match": true,
+      "name": "A16. Share of orders by channel in 2025"
+    },
+    "A17": {
+      "match": true,
+      "name": "A17. Which branch grew revenue the most from the first half of 2025 to the second half?"
+    },
+    "A18": {
+      "match": true,
+      "name": "A18. Compare returns rate by category, Q1 2025 against Q4 2025"
+    },
+    "A19": {
+      "match": true,
+      "name": "A19. Revenue for the Harbor branch in May 2025"
+    },
+    "A20": {
+      "match": true,
+      "name": "A20. Returns rate at Riveside for Q2 2025"
+    },
+    "R01": {
+      "match": true,
+      "name": "R01. What was the profit margin by branch in 2025?"
+    },
+    "R02": {
+      "match": true,
+      "name": "R02. What was the returns rate last quarter?"
+    },
+    "R03": {
+      "match": true,
+      "name": "R03. Revenue by salesperson in 2025"
+    },
+    "R04": {
+      "match": true,
+      "name": "R04. How much did Sarah Mitchell spend with us in March 2025?"
+    },
+    "R05": {
+      "match": true,
+      "name": "R05. How many orders did the Lakeside branch take in 2025?"
+    },
+    "R06": {
+      "match": true,
+      "name": "R06. Roughly what will revenue be in January 2026?"
+    },
+    "S01": {
+      "match": true,
+      "name": "S01. What was revenue in March 2025?"
+    },
+    "S02": {
+      "match": true,
+      "name": "S02. How many orders did we take in 2025?"
+    }
+  },
+  "matched": 28,
+  "of_cases": 28,
+  "gates_held": 6,
+  "of_gates": 6,
+  "passed": true,
+  "no_verdict": false,
+  "bar": "18 of the 20 answered exactly, all six refusals held, both state cases matched",
+  "model_calls": 84,
+  "tokens": {
+    "input": 228,
+    "output": 15375,
+    "cache_read": 394008,
+    "cache_write": 223805
+  },
+  "cost_usd": 0.039626005,
+  "harness_cost_usd": 0.039626005,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 6,
+  "minutes": 1.7,
+  "warnings": [],
+  "harness_record": "runs/S202610312155/data-answers-haiku-5-5/copy/eval/runs/S202610312155-haiku-5-5/result.json",
+  "harness_verdict": {
+    "answered_exactly": 20,
+    "of_answered": 20,
+    "refusals_held": 6,
+    "of_refusals": 6,
+    "state_matched": 2,
+    "of_state": 2,
+    "passed": true
+  },
+  "commit": "5ecb66f8d9c7df97068cbb917321614a0933a147",
+  "dirty": false
+}
