@@ -1,0 +1,17 @@
+name: schedule-probe
+
+# Temporary: proves this repository fires scheduled workflows at all. No key, no model, no cost.
+# Delete once a probe run shows up.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo "::notice title=Schedule fired::event ${{ github.event_name }} at $(date -u +%H:%M) UTC"
