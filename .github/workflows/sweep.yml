@@ -9,6 +9,7 @@ on:
     branches: [main]
   schedule:
     - cron: "17 1 * * 0"   # Sunday 9:17 AM in Kuala Lumpur
+    - cron: "7 3 1 11 *"   # one-off proof of the schedule: 1 Nov, 11:07 AM in Kuala Lumpur; remove with the next pin move
   workflow_dispatch:
 
 permissions:
@@ -83,7 +84,7 @@ jobs:
 
       - name: Keep the run folders
         if: always() && steps.sweep.outputs.sweep != ''
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: runs-${{ steps.sweep.outputs.sweep }}
           path: |
