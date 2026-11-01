@@ -1,7 +1,7 @@
 name: schedule-probe
 
 # Temporary: proves this repository fires scheduled workflows at all. No key, no model, no cost.
-# Delete once a probe run shows up.
+# Delete once a probe run shows up. Touched by mjazzly
 on:
   schedule:
     - cron: "*/5 * * * *"
