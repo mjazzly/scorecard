@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // CI step: reads a sweep's records from results/, writes the job summary, and decides the run.
 //
-// A case "breaks" when it matched on its build's last record (same build, same model) and misses
-// now. The smallest model is noisy on some builds, so one miss is only a suspect: the workflow reruns
+// A case "breaks" when it is held and misses now. A case is held when it matched on its build's
+// last two records (same build, same model), or on the only one there is: a single lucky match on a
+// case the model usually misses is not a baseline. The smallest model is noisy on some builds, so one miss is only a suspect: the workflow reruns
 // the builds with a suspect case once (`--plan` names them), and the run is red only when the same
 // case misses on the rerun too, or when any job is refused. A build missing its bar is not by itself
 // red: the gate is "nothing that held has broken". Both records stay on the record. On green,
@@ -47,14 +48,17 @@ const passingOn = smallestPassing(before);
 const gated = (r) => passingOn[r.build]?.model_tag === r.model_tag;
 
 // The first look: every refusal, and every case that matched on the last record and misses now.
-const red = [], suspects = [], cleared = [], watched = [];
+const red = [], suspects = [], cleared = [], watched = [], unheld = [];
 if (!recs.length) red.push({ build: "every build", model: "", case: "", why: `no records for sweep ${sweep}: the sweep did not run` });
 const rows = recs.map((r) => {
   const prev = previousOf(all.filter((x) => x.sweep !== rerun), r);
+  const prev2 = prev ? previousOf(all.filter((x) => x.sweep !== rerun), prev) : null;
+  const held = (id) => prev2 ? prev2.cases[id]?.match === true : true;
   const c = compareRecords(prev, r, settings);
   if (r.refused) red.push({ build: r.build, model: r.model, case: "", why: `refused (${r.refused.gate}: ${r.refused.detail})` });
   else for (const x of c.cases_changed) if (x.from === true && x.to !== true) {
-    const s = { build: r.build, model: r.model, rec: r, case: x.id, name: x.name, why: `${state(x.from)} on ${prev.sweep}, ${state(x.to)} on ${sweep}` };
+    const s = { build: r.build, model: r.model, rec: r, case: x.id, name: x.name, why: `${state(x.from)} on ${prev.sweep}${prev2 ? ` and ${state(prev2.cases[x.id]?.match ?? null)} on ${prev2.sweep}` : ""}, ${state(x.to)} on ${sweep}` };
+    if (!held(x.id)) { unheld.push({ ...s, why: `${s.why}; not held: it did not match on both of the last two records` }); continue; }
     if (gated(r)) suspects.push(s);
     else watched.push({ ...s, why: `${s.why}; watched, not gated: its smallest passing model is ${passingOn[r.build]?.model_tag ?? "none on the record"}` });
   }
@@ -95,6 +99,11 @@ if (watched.length) {
   for (const x of watched) L.push(`| ${cell(x.build)} | ${cell(x.model)} | ${caseCell(x)} | ${cell(x.why)} |`);
   L.push("");
 }
+if (unheld.length) {
+  L.push("Missed, but not held (matched on only one of the last two records, so not a baseline):", "", "| Build | Model | Case | What happened |", "|---|---|---|---|");
+  for (const x of unheld) L.push(`| ${cell(x.build)} | ${cell(x.model)} | ${caseCell(x)} | ${cell(x.why)} |`);
+  L.push("");
+}
 if (cleared.length) {
   L.push("Missed once and matched on the rerun (model noise, not counted against the run):", "", "| Build | Model | Case | What happened |", "|---|---|---|---|");
   for (const x of cleared) L.push(`| ${cell(x.build)} | ${cell(x.model)} | ${caseCell(x)} | ${cell(x.why)} |`);
@@ -115,6 +124,7 @@ if (process.env.GITHUB_ACTIONS) {
   const esc = (t) => String(t).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
   for (const x of red) console.log(`::error title=${esc(x.case ? "Case broke" : "Run refused")}::${esc(`${x.build} on ${x.model}${x.case ? `, case ${x.case}` : ""}: ${x.why}`)}`);
   for (const x of watched) console.log(`::warning title=Watched::${esc(`${x.build} on ${x.model}, case ${x.case}: ${x.why}`)}`);
+  for (const x of unheld) console.log(`::warning title=Not held::${esc(`${x.build} on ${x.model}, case ${x.case}: ${x.why}`)}`);
   for (const x of cleared) console.log(`::warning title=Missed once::${esc(`${x.build} on ${x.model}, case ${x.case}: ${x.why}`)}`);
   if (green) console.log(`::notice title=Green::${esc(`sweep ${sweep}: ${rows.map(({ r }) => `${r.build} ${r.matched} of ${r.of_cases}`).join(", ")}${again.length ? `; rerun ${again.map((r) => `${r.build} ${r.matched} of ${r.of_cases}`).join(", ")}` : ""}; ${money(total)}`)}`);
 }
