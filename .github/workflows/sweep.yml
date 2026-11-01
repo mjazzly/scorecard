@@ -4,12 +4,13 @@ name: sweep
 # run if any case that matched on its build's last record misses now and again on one rerun of that
 # build. A green run on main commits its records to results/ (prefix [ci]) and dates the badge. The
 # largest model is never run here.
+# The weekly run (Sunday 9:17 AM in Kuala Lumpur) is started from outside: GitHub's own scheduler
+# created no run for this repository (1 Nov 2026), so a cron-job.org job calls this workflow's
+# dispatch endpoint with a token that can only start Actions here. No schedule trigger is kept, so a
+# recovered GitHub scheduler cannot double the weekly run.
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "17 1 * * 0"   # Sunday 9:17 AM in Kuala Lumpur
-    - cron: "7 3 1 11 *"   # one-off proof of the schedule: 1 Nov, 11:07 AM in Kuala Lumpur; remove with the next pin move
   workflow_dispatch:
 
 permissions:
