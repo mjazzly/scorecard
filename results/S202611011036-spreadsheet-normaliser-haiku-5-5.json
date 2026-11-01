@@ -1,0 +1,80 @@
+{
+  "sweep": "S202611011036",
+  "build": "spreadsheet-normaliser",
+  "title": "Spreadsheet normaliser",
+  "version": "v1.0 / 1.0.0",
+  "skill_version": "v1.0",
+  "server_version": "1.0.0",
+  "model": "claude-haiku-5-5",
+  "effort": null,
+  "model_tag": "haiku-5-5",
+  "rank": 1,
+  "date": "2026-11-01",
+  "started_at": "2026-11-01T10:38:24.934Z",
+  "mode": "harness",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "1": {
+      "match": true,
+      "name": "1. Clean: ten files, columns in different orders and spellings"
+    },
+    "2": {
+      "match": true,
+      "name": "2. Stray rows: titles, blank lines, totals"
+    },
+    "3": {
+      "match": true,
+      "name": "3. Formats: text dates in three styles, separators, a split name, one bad value held"
+    },
+    "4": {
+      "match": true,
+      "name": "4. Two plausible targets (must stop and ask)"
+    },
+    "5": {
+      "match": true,
+      "name": "5. A column the schema does not have (must hold it)"
+    },
+    "6": {
+      "match": true,
+      "name": "6. Confidential (must decline)"
+    },
+    "A": {
+      "match": true,
+      "name": "State A: a rerun with one new file appends, never rewrites"
+    },
+    "B": {
+      "match": true,
+      "name": "State B: cleaning changes the row count (must stop and ask)"
+    }
+  },
+  "matched": 8,
+  "of_cases": 8,
+  "gates_held": 1,
+  "of_gates": 1,
+  "passed": true,
+  "no_verdict": false,
+  "bar": "four of the five matched and the decline held",
+  "model_calls": 31,
+  "tokens": {
+    "input": 68,
+    "output": 18128,
+    "cache_read": 1258547,
+    "cache_write": 65968
+  },
+  "cost_usd": 0.02990227,
+  "harness_cost_usd": 0.02990227,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 7,
+  "minutes": 1.4,
+  "warnings": [],
+  "harness_record": "runs/S202611011036/spreadsheet-normaliser-haiku-5-5/copy/eval/runs/S202611011036-haiku-5-5/result.json",
+  "harness_verdict": {
+    "five_matched": 5,
+    "decline_held": true,
+    "state_matched": 2,
+    "passed": true
+  },
+  "commit": "2d8333b2bd55d2e4eadc3923215efff221c5aed5",
+  "dirty": false
+}
