@@ -2,9 +2,9 @@
 
 [![sweep](https://github.com/mjazzly/scorecard/actions/workflows/sweep.yml/badge.svg?branch=main)](https://github.com/mjazzly/scorecard/actions/workflows/sweep.yml) ![last green run](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmjazzly%2Fscorecard%2Fmain%2Fci%2Flast-green.json)
 
-After any change to a skill, a tool server or a model, someone has to rerun every build's case set on every model, compare the results with the last run, and decide whether the change broke anything and which model is now the cheapest that passes. For four builds that is four commands in four folders and a comparison by eye. This build runs **every build on every model with one command** and keeps **one scorecard**: build by model by version, cases matched, gates held, cost per run, and the change since the last run. It names the smallest model that passes each build. A run whose answer key was reachable by the model is refused and never counted.
+After any change to a skill, a tool server or a model, someone has to rerun every build's case set on every model, compare the results with the last run, and decide whether the change broke anything and which model is now the cheapest that passes. For five builds that is five commands in five folders and a comparison by eye. This build runs **every build on every model with one command** and keeps **one scorecard**: build by model by version, cases matched, gates held, cost per run, and the change since the last run. It names the smallest model that passes each build. A run whose answer key was reachable by the model is refused and never counted.
 
-It is one harness above four: the [meeting tracker](https://github.com/mjazzly/meeting-tracker-assistant), the [spreadsheet normaliser](https://github.com/mjazzly/spreadsheet-normaliser), [data answers](https://github.com/mjazzly/data-answers) and the [sourced brief](https://github.com/mjazzly/sourced-brief). Each of those already has its own harness, checker, expected results, answers file and prices file. **Nothing inside them is rewritten.** Each gets one small file, `harness.json`, that says where those pieces are and what its pass bar is; the scorecard reads the adapter, copies the build into a fresh folder, runs the build's own harness there, and takes the build's own verdict.
+It is one harness above five: the [meeting tracker](https://github.com/mjazzly/meeting-tracker-assistant), the [spreadsheet normaliser](https://github.com/mjazzly/spreadsheet-normaliser), [data answers](https://github.com/mjazzly/data-answers), the [sourced brief](https://github.com/mjazzly/sourced-brief) and the [contact pipeline](https://github.com/mjazzly/contact-pipeline). Each of those already has its own harness, checker, expected results, answers file and prices file. **Nothing inside them is rewritten.** Each gets one small file, `harness.json`, that says where those pieces are and what its pass bar is; the scorecard reads the adapter, copies the build into a fresh folder, runs the build's own harness there, and takes the build's own verdict. The contact pipeline is Python: its `eval/run_eval.js` hands the call to `eval.py` through uv, so the scorecard starts it like the others.
 
 Four gates are enforced in code, so a run cannot be counted by mistake:
 
@@ -28,7 +28,7 @@ The builds' own rule carries over too: a run the build's harness did not count, 
 | `lib/gates.js` | The answer key scan, before and after the run. |
 | `lib/lock.js` | The lock: reads `builds.lock`, names the commit a build folder is at, and refuses a build that is not at its pinned commit. |
 | `lib/record.js` | The record: derived from the build's own `result.json`, cost recomputed from the tokens and the build's prices, and checked equal to it. |
-| `adapters/` | The four adapters as committed into the four builds. |
+| `adapters/` | The five adapters as committed into the five builds. |
 | `builds.lock` | The commit of each build that CI runs (below). |
 | `ci/checkout.js` | CI: clones each build at its pinned commit beside this folder and installs it. |
 | `ci/report.js` | CI: the job summary, and the rule that turns a run red. |
@@ -68,7 +68,7 @@ A build is added by dropping a `harness.json` into its folder. The next sweep pi
 
 ## Run it
 
-Needs Node 20 or later and the four builds installed (`npm install` in each) beside this folder. This folder has no dependencies of its own.
+Needs Node 20 or later and the five builds installed beside this folder (`npm install` in each Node build; the contact pipeline needs uv on the path). This folder has no dependencies of its own.
 
 ```
 node test/run_cases.js        # the scorecard's own case set on the builds' scripted stand-ins; no key, seconds
@@ -100,7 +100,7 @@ A sweep writes `runs/<sweep>/<build>-<model>/` with the staging copy, `harness.l
 `.github/workflows/sweep.yml` runs the sweep on every push to `main`, every Sunday at 9:17 AM Kuala Lumpur time, and by hand from the Actions tab. The weekly run is started by an outside scheduler (cron-job.org) through the workflow's dispatch endpoint, with a token limited to starting Actions in this repository, because GitHub's own scheduler created no run here when it was tried on 1 Nov 2026.
 
 1. **Refuses to start without the key.** The key is the repository secret `ANTHROPIC_API_KEY`, from a Console workspace of its own (`scorecard-ci`) with its own monthly spend limit. No model is called without it.
-2. **Checks out the four builds at the commits in `builds.lock`**, beside this folder, and installs each from its own lockfile. A build that is not at its pin is refused on the record, so every run can be repeated exactly.
+2. **Checks out the five builds at the commits in `builds.lock`**, beside this folder, and installs each from its own lockfile. uv is set up first, for the contact pipeline's Python harness. A build that is not at its pin is refused on the record, so every run can be repeated exactly.
 3. **Runs the scorecard's own case set** (no key, no model), so a broken harness fails before anything is spent.
 4. **Sweeps on the smallest model only.** The largest stays a manual run, for cost.
 5. **Confirms a miss before it counts.** The smallest model is noisy on some builds (the sourced brief has matched between 0 and 7 of its 8 cases across its runs there), so a case counts as held only when it matched on its build's last two records (or the only one there is), and a held case that misses now is a suspect: that build is rerun once, as sweep `S...r`. A case that matched once among misses is listed but is not a baseline.
@@ -133,3 +133,4 @@ A sweep on the smallest model costs about US$0.15, and up to about US$0.25 with 
 | v1.0 sweeps 1 and 2 | 30 Oct 2026 | First sweep on claude-haiku-5-5 (S202610301543) and claude-opus-5-5 at high effort (S202610301552), four builds each. Smallest passing model claude-haiku-5-5 on the tracker, the normaliser and data answers; none on the sourced brief, whose v1.2 opus run missed State A on a page identical to its earlier passing run. | The miss traced to the brief's state check comparing claim tables; fixed in sourced brief v1.3. |
 | v1.1 | 30 Oct 2026 | `import.js` brings each build's own past blind runs into `results/`, marked imported; the page counts sweeps from the scorecard's own runs only. A run the build's own harness did not count is refused with that reason. | With the history on the record, a change at the same version and model is named against the build's own earlier run. |
 | v1.2 | 31 Oct 2026 | Evals in CI: `builds.lock`, `--locked` and `--smallest`, the commit on every record, the workflow, the job summary and the badge. A miss is confirmed on one rerun of its build before it turns the run red, and only builds that pass on the smallest model are gated. A case is held only when it matched on its build's last two records. The weekly run is started by an outside scheduler. | A change to a build is tested on the push that makes it, and weekly, without a sweep from the Mac. |
+| v1.2, fifth build | 3 Nov 2026 | The contact pipeline joins: its adapter in `adapters/`, its pin in `builds.lock`, and its eight recorded runs imported (v1.0 and v1.1 on both models, and three more haiku runs on v1.1). The workflow sets up uv, which its Python harness runs through. | Its `harness.json` was already in the build, so the runner found it with no change; a locked sweep in CI also needs its pin, uv on the runner, and a `package-lock.json` in the build for `npm ci`. |
