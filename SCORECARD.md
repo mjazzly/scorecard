@@ -1,6 +1,6 @@
 # Scorecard
 
-Rebuilt from `results/` on 2026-11-01. **4 builds**, **48 counted runs** (17 imported from the builds' own records) and **8 sweeps**. A full sweep on the smallest passing models costs **US$0.149**.
+Rebuilt from `results/` on 2026-11-03. **5 builds**, **56 counted runs** (25 imported from the builds' own records) and **8 sweeps**. A full sweep on the smallest passing models costs **US$0.150**.
 
 ## Builds by model
 
@@ -10,6 +10,7 @@ Rebuilt from `results/` on 2026-11-01. **4 builds**, **48 counted runs** (17 imp
 | Spreadsheet normaliser | v1.0 / 1.0.0 | 8 of 8 cases, gates 1 of 1, US$0.028, bar met (smallest passing) | 8 of 8 cases, gates 1 of 1, US$0.891, bar met |
 | Data answers | v1.1 / 1.1.0 | 28 of 28 cases, gates 6 of 6, US$0.040, bar met (smallest passing) | 28 of 28 cases, gates 6 of 6, US$1.512, bar met |
 | Sourced brief | v1.3 / 1.3.0 | 8 of 8 cases, gates 4 of 4, US$0.062, bar met (smallest passing) | 8 of 8 cases, gates 4 of 4, US$1.667, bar met |
+| Contact pipeline | v1.1 / 1.1.0 | 43 of 43 cases, gates 3 of 3, US$0.001, bar met (smallest passing) | 43 of 43 cases, gates 3 of 3, US$0.036, bar met |
 
 Cases: the build's own case set, matched by the build's own checker. Gates: the stop and decline cases in that set. Cost: every token at the price in the build's prices file, caching counted. The bar is each build's own pass rule.
 
@@ -37,3 +38,5 @@ A cost that moved by more than 30% against the previous record is marked moved.
 | Sourced brief | v1.1 / 1.1.0 | 2026-10-30 | 5 of 8, not met | 5 of 8, not met |
 | Sourced brief | v1.2 / 1.2.0 | 2026-10-30 | 6 of 8, not met | 7 of 8, not met |
 | Sourced brief | v1.3 / 1.3.0 | 2026-10-30 | 8 of 8, met | 8 of 8, met |
+| Contact pipeline | v1.0 / 1.0.0 | 2026-11-03 | 40 of 42, not met | 42 of 42, met |
+| Contact pipeline | v1.1 / 1.1.0 | 2026-11-03 | 43 of 43, met | 43 of 43, met |

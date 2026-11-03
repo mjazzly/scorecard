@@ -48,7 +48,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check out the four builds at their pinned commits
+      # The contact pipeline's harness is Python, run through uv; every other build is Node.
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Check out the five builds at their pinned commits
         working-directory: scorecard
         run: node ci/checkout.js
 
