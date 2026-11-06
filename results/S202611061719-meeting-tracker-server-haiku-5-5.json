@@ -1,0 +1,80 @@
+{
+  "sweep": "S202611061719",
+  "build": "meeting-tracker-server",
+  "title": "Meeting tracker",
+  "version": "v2.2 / 2.2.0",
+  "skill_version": "v2.2",
+  "server_version": "2.2.0",
+  "model": "claude-haiku-5-5",
+  "effort": null,
+  "model_tag": "haiku-5-5",
+  "rank": 1,
+  "date": "2026-11-06",
+  "started_at": "2026-11-06T17:19:50.122Z",
+  "mode": "harness",
+  "counted": true,
+  "refused": null,
+  "cases": {
+    "01_halden_kickoff.txt": {
+      "match": true,
+      "name": "01_halden_kickoff.txt"
+    },
+    "02_meridian_pricing.txt": {
+      "match": true,
+      "name": "02_meridian_pricing.txt"
+    },
+    "03_northgate_claims.txt": {
+      "match": true,
+      "name": "03_northgate_claims.txt"
+    },
+    "04_halden_finance.txt": {
+      "match": true,
+      "name": "04_halden_finance.txt"
+    },
+    "05_meridian_update.txt": {
+      "match": false,
+      "name": "05_meridian_update.txt"
+    },
+    "06_northgate_board.txt": {
+      "match": true,
+      "name": "06_northgate_board.txt"
+    },
+    "07_halden_followup.txt": {
+      "match": true,
+      "name": "07_halden_followup.txt"
+    },
+    "08_meridian_contracts.txt": {
+      "match": true,
+      "name": "08_meridian_contracts.txt"
+    }
+  },
+  "matched": 7,
+  "of_cases": 8,
+  "gates_held": 1,
+  "of_gates": 1,
+  "passed": true,
+  "no_verdict": false,
+  "bar": "four of the five matched and the decline held",
+  "model_calls": 17,
+  "tokens": {
+    "input": 38,
+    "output": 15073,
+    "cache_read": 370701,
+    "cache_write": 39508
+  },
+  "cost_usd": 0.016185810000000002,
+  "harness_cost_usd": 0.016185810000000002,
+  "prices_read": "2026-10-25",
+  "prices_age_days": 12,
+  "minutes": 1.1,
+  "warnings": [],
+  "harness_record": "runs/S202611061719/meeting-tracker-server-haiku-5-5/copy/eval/runs/S202611061719-haiku-5-5/result.json",
+  "harness_verdict": {
+    "five_matched": 4,
+    "decline_held": true,
+    "state_matched": 2,
+    "passed": true
+  },
+  "commit": "9bafe7a1a6fb2d4d5159376ee703a94df4e723bd",
+  "dirty": false
+}
