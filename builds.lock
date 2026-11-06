@@ -1,7 +1,7 @@
 {
   "note": "The commit of each build a locked sweep runs. ci/checkout.js clones each repo at its commit beside this folder; run.js --locked refuses any build whose checkout is not at its commit. Move a pin by editing the commit here and pushing.",
   "builds": {
-    "meeting-tracker-server": { "repo": "mjazzly/meeting-tracker-assistant", "commit": "339fa34cff0b9f35aa9cae12811856c0c75056ae" },
+    "meeting-tracker-server": { "repo": "mjazzly/meeting-tracker-assistant", "commit": "9bafe7a1a6fb2d4d5159376ee703a94df4e723bd" },
     "spreadsheet-normaliser": { "repo": "mjazzly/spreadsheet-normaliser", "commit": "2d8333b2bd55d2e4eadc3923215efff221c5aed5" },
     "data-answers": { "repo": "mjazzly/data-answers", "commit": "5ecb66f8d9c7df97068cbb917321614a0933a147" },
     "sourced-brief": { "repo": "mjazzly/sourced-brief", "commit": "bf9fef47d0c9ae27e19c161eeba210adf4f42e98" },
