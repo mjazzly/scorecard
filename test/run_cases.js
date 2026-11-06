@@ -163,11 +163,15 @@ await kase("6", "Identical rerun", async () => {
 await kase("A", "New version", async () => {
   const entry = trackerEntry();
   if (!entry) return { ok: false, detail: "tracker not under the root" };
-  const overlays = [{ path: "skill/SKILL.md", edit: (t) => t.replace(/Version: v2\.0/, "Version: v2.1") }];
+  // The bump is from whatever version the skill carries now, so the case holds after a real version move.
+  const m = /Version: v(\d+)\.(\d+)/.exec(fs.readFileSync(path.join(entry.dir, "skill/SKILL.md"), "utf8"));
+  if (!m) return { ok: false, detail: "no Version line in the tracker's skill" };
+  const from = `v${m[1]}.${m[2]}`, to = `v${m[1]}.${Number(m[2]) + 1}`;
+  const overlays = [{ path: "skill/SKILL.md", edit: (t) => t.replace(`Version: ${from}`, `Version: ${to}`) }];
   const rec = await runJob({ settings, sweep: "S6c", entry, model: haiku, mock: true, overlays, ...sub("c6"), say: quiet });
   const all = loadRecords(sub("c6").resultsDir);
   const c = compareRecords(previousOf(all, rec), rec, settings);
-  const ok = rec.skill_version === "v2.1" && c.version.changed && /^v2\.0 \//.test(c.version.from) && /^v2\.1 \//.test(c.version.to) && c.cases_changed.length === 0;
+  const ok = rec.skill_version === to && c.version.changed && c.version.from.startsWith(`${from} /`) && c.version.to.startsWith(`${to} /`) && c.cases_changed.length === 0;
   return { ok, detail: `version ${c.version.from} to ${c.version.to}, named against ${c.previous}; cases changed ${c.cases_changed.length}` };
 });
 
